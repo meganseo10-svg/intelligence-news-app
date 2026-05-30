@@ -17,6 +17,16 @@ export default async function AppLayout({
     redirect("/login");
   }
 
+  // 온보딩 미완료 사용자는 온보딩으로 보냄
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("onboarding_completed")
+    .eq("user_id", user.id)
+    .single();
+  if (!profile?.onboarding_completed) {
+    redirect("/onboarding/profile");
+  }
+
   const displayName = user.user_metadata?.display_name as string | undefined;
 
   return (

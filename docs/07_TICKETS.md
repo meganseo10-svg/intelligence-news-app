@@ -201,20 +201,20 @@ export const env = envSchema.parse(process.env);
 #### T-011 · 온보딩 1단계: 계정 정보 ⏱️ 2h
 
 **Tasks**:
-- [ ] `app/(onboarding)/layout.tsx` — 진행바 + 공통 프레임
-- [ ] `app/(onboarding)/profile/page.tsx`
-- [ ] 미들웨어: `onboarding_completed = false`면 다른 페이지 차단
+- [x] `app/(onboarding)/layout.tsx` — 진행바 + 공통 프레임 + 게이트
+- [x] `app/(onboarding)/profile/page.tsx`
+- [x] 게이트: `onboarding_completed = false`면 (app) 레이아웃에서 온보딩으로 리다이렉트
 
 ---
 
 #### T-012 · 온보딩 2단계: 비즈니스 프로필 ⏱️ 3h
 
 **Tasks**:
-- [ ] 폼 (react-hook-form + Zod, `06_UI_SPEC.md` 스키마 참고)
-- [ ] 업종 select, 회사 규모 select
-- [ ] 태그 입력 컴포넌트 (제품·서비스)
-- [ ] `PUT /api/profile` 호출
-- [ ] 타임존 자동 감지: `Intl.DateTimeFormat().resolvedOptions().timeZone`
+- [x] 폼 (react-hook-form + Zod, `06_UI_SPEC.md` 스키마)
+- [x] 업종 select, 회사 규모 select
+- [x] 태그 입력 컴포넌트 (제품·서비스 / 타겟 고객) — components/onboarding/TagInput
+- [x] `PUT /api/profile` 호출 (+ 표시이름은 auth 메타데이터)
+- [x] 타임존 자동 감지: `Intl.DateTimeFormat().resolvedOptions().timeZone`
 
 ---
 
