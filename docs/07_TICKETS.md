@@ -166,11 +166,12 @@ export const env = envSchema.parse(process.env);
 #### T-008 · Supabase Auth 통합 ⏱️ 3h
 
 **Tasks**:
-- [ ] 로그인 페이지 `/login` — 이메일/비번 + Google + Kakao
-- [ ] 회원가입 페이지 `/signup`
-- [ ] OAuth 콜백 `/auth/callback` 라우트
-- [ ] 로그아웃 액션
-- [ ] Supabase Dashboard에서 OAuth 프로바이더 활성화 (Google, Kakao)
+- [x] 로그인 페이지 `/login` — 이메일/비번 + Google + Kakao 버튼
+- [x] 회원가입 페이지 `/signup` (이름+이메일+비번+약관)
+- [x] OAuth 콜백 `/auth/callback` 라우트 (코드→세션 교환)
+- [x] 로그아웃 액션 (lib/actions/auth.ts)
+- [ ] Supabase Dashboard에서 OAuth 프로바이더 활성화 (Google, Kakao) — 사용자 작업, 가이드 제공
+- [x] 검증: 테스트 계정 로그인 성공(세션 발급) 확인
 
 **Done When**: 가입 → 로그인 → 세션 유지 → 로그아웃 전체 플로우 동작.
 
