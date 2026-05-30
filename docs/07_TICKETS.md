@@ -180,9 +180,9 @@ export const env = envSchema.parse(process.env);
 #### T-009 · USER_PROFILES 자동 생성 확인 ⏱️ 1h
 
 **Tasks**:
-- [ ] `03_DATA_MODEL.sql`의 `handle_new_user` 트리거가 동작하는지 확인
-- [ ] 테스트 가입 후 `user_profiles` row 자동 생성 확인
-- [ ] RLS 정책 동작 확인 (다른 사용자 데이터 조회 불가)
+- [x] `03_DATA_MODEL.sql`의 `handle_new_user` 트리거가 동작하는지 확인
+- [x] 테스트 가입 후 `user_profiles` row 자동 생성 확인
+- [x] RLS 정책 동작 확인 (비로그인 차단 / 본인만 조회 / 타인 조회 불가)
 
 ---
 
