@@ -589,7 +589,7 @@ const result = await db.execute(sql`
 - [x] `emails/DailyDigest.tsx` — React Email
 - [x] 상단 요약 + 뉴스 카드(제목 링크) + 시사점
 - [~] 다크모드 대응 (이메일은 라이트 기본; 추후)
-- [~] 실제 발송 테스트 — Resend 키 받으면 검증
+- [x] 실제 발송 검증 — Resend로 megan.seo10@gmail.com 수신 성공 ✅
 
 ---
 
@@ -600,7 +600,7 @@ const result = await db.execute(sql`
 - [x] 사용자별 시각 매칭 + `lib/notify/email.ts` 발송
 - [x] 발송 로그 (api_usage_log: resend_email)
 - [x] 수동 발송: admin trigger `action:"send"` (테스트용)
-- [~] 실제 수신 검증 — Resend 키 받으면
+- [x] 실제 수신 검증 — 다이제스트 9건 메일 발송·수신 성공 ✅
 
 ---
 
