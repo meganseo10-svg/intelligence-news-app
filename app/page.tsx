@@ -1,101 +1,85 @@
-import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Newspaper, Sparkles, Mail, Share2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { Button } from "@/components/ui/button";
 
-export default function Home() {
+const FEATURES = [
+  {
+    icon: Newspaper,
+    title: "내 키워드 자동 수집",
+    desc: "네이버·해외 매체·RSS에서 매일 관련 뉴스를 모아요.",
+  },
+  {
+    icon: Sparkles,
+    title: "우리 회사 관점 시사점",
+    desc: "AI가 번역·요약하고 '내 비즈니스에 어떤 의미인지'까지 정리해요.",
+  },
+  {
+    icon: Mail,
+    title: "매일 아침 이메일",
+    desc: "원하는 시각에 브리핑이 메일로 도착해요.",
+  },
+  {
+    icon: Share2,
+    title: "한 번에 공유",
+    desc: "분석한 뉴스를 링크·메일로 동료에게 바로 공유해요.",
+  },
+];
+
+export default async function Home() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) redirect("/feed");
+
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm sm:text-left">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent bg-foreground px-4 text-sm text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] sm:h-12 sm:px-5 sm:text-base"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] sm:h-12 sm:min-w-44 sm:px-5 sm:text-base"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="mx-auto max-w-3xl px-4">
+      <section className="flex flex-col items-center py-20 text-center">
+        <div className="mb-4 flex items-center gap-2 text-muted-foreground">
+          <Newspaper className="h-5 w-5" />
+          <span className="text-sm font-medium">Intelligence Daily</span>
         </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        <h1 className="text-balance text-3xl font-semibold leading-tight sm:text-4xl">
+          매일 아침, 내 비즈니스 관점의 뉴스 브리핑
+        </h1>
+        <p className="mt-4 max-w-xl text-balance text-muted-foreground">
+          관심 키워드의 국내외 뉴스를 AI가 번역·요약하고, 우리 회사 관점의
+          시사점까지 정리해 매일 전달해요.
+        </p>
+        <div className="mt-8 flex gap-3">
+          <Button asChild size="lg">
+            <Link href="/signup">시작하기</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/login">로그인</Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="grid gap-4 pb-20 sm:grid-cols-2">
+        {FEATURES.map((f) => {
+          const Icon = f.icon;
+          return (
+            <div key={f.title} className="rounded-xl border bg-background p-5">
+              <Icon className="mb-2 h-5 w-5" />
+              <h3 className="text-base font-medium">{f.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{f.desc}</p>
+            </div>
+          );
+        })}
+      </section>
+
+      <footer className="border-t py-6 text-center text-xs text-muted-foreground">
+        <Link href="/terms" className="hover:underline">
+          이용약관
+        </Link>
+        {" · "}
+        <Link href="/privacy" className="hover:underline">
+          개인정보처리방침
+        </Link>
       </footer>
-    </div>
+    </main>
   );
 }
