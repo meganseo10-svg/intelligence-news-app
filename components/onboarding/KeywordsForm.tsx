@@ -48,12 +48,44 @@ export function KeywordsForm() {
     general: [],
   });
   const [saving, setSaving] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const total = Object.values(byCat).reduce((sum, arr) => sum + arr.length, 0);
 
   function setGroup(key: string, terms: string[]) {
     setByCat((prev) => ({ ...prev, [key]: terms }));
+  }
+
+  async function handleSuggest() {
+    setSuggesting(true);
+    setError(null);
+    setNote(null);
+    try {
+      const res = await fetch("/api/keywords/suggest", { method: "POST" });
+      if (!res.ok) {
+        const j = await res.json().catch(() => null);
+        throw new Error(j?.error?.message ?? "추천에 실패했어요.");
+      }
+      const { suggestions } = (await res.json()) as {
+        suggestions: Record<string, string[]>;
+      };
+      setByCat((prev) => {
+        const next = { ...prev };
+        for (const key of ["competitor", "industry", "product", "general"]) {
+          const merged = new Set(prev[key] ?? []);
+          (suggestions[key] ?? []).forEach((t) => merged.add(t));
+          next[key] = Array.from(merged);
+        }
+        return next;
+      });
+      setNote("AI가 추천 키워드를 채웠어요. 원하지 않는 건 X로 빼세요.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "추천에 실패했어요.");
+    } finally {
+      setSuggesting(false);
+    }
   }
 
   async function handleFinish() {
@@ -91,12 +123,13 @@ export function KeywordsForm() {
           type="button"
           variant="outline"
           className="w-full"
-          disabled
-          title="T-025에서 활성화됩니다"
+          onClick={handleSuggest}
+          disabled={suggesting}
         >
           <Sparkles className="mr-2 h-4 w-4" />
-          AI 추천 키워드 (준비중)
+          {suggesting ? "AI가 추천하는 중…" : "AI 추천 키워드"}
         </Button>
+        {note && <p className="text-sm text-muted-foreground">{note}</p>}
 
         {GROUPS.map((g) => {
           const Icon = g.icon;

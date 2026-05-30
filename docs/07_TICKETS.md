@@ -385,11 +385,14 @@ const result = await db.execute(sql`
 #### T-025 · 통합 분석 프롬프트 구현 ⏱️ 3h
 
 **Tasks**:
-- [ ] `lib/llm/prompts.ts` — `04_LLM_PROMPTS.md`의 프롬프트 그대로 옮김
-- [ ] `lib/llm/analyze.ts` — `analyzeNews()`, `analyzeNewsWithRetry()`
-- [ ] `lib/llm/schema.ts` — Zod 검증 스키마
-- [ ] `lib/llm/suggest-keywords.ts` — 키워드 추천 함수
-- [ ] `POST /api/keywords/suggest` 엔드포인트 구현 (T-013 보완)
+- [x] `lib/llm/prompts.ts` — 프롬프트 그대로 옮김 (+ `lib/llm/complete.ts` LLM 교체지점)
+- [x] `lib/llm/analyze.ts` — `analyzeNews()`, `analyzeNewsWithRetry()`
+- [x] `lib/llm/schema.ts` — Zod 검증 스키마
+- [x] `lib/llm/suggest-keywords.ts` — 키워드 추천 함수
+- [x] `POST /api/keywords/suggest` 엔드포인트 + 온보딩 "AI 추천" 버튼 활성화
+- [x] 검증: 샘플 뉴스 분석 + 키워드 12개 추천 (OpenAI gpt-4o-mini)
+
+**Note**: Anthropic 크레딧 막혀 분석 LLM을 OpenAI로 구현. `lib/llm/complete.ts` 한 곳만 바꾸면 Claude로 전환 가능.
 
 ---
 
