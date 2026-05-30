@@ -57,7 +57,8 @@ function relativeTime(iso: string | null): string {
 export function NewsCard({ item }: { item: FeedItem }) {
   const { news, insight } = item;
   const hasTranslation = !!item.titleTranslated && news.originalLang !== "ko";
-  const [showOriginal, setShowOriginal] = useState(false);
+  // 해외 기사는 기본적으로 원문을 보여주고, 번역 버튼으로 한국어 전환
+  const [showOriginal, setShowOriginal] = useState(news.originalLang !== "ko");
   const [copied, setCopied] = useState(false);
   const [saved, setSaved] = useState(!!item.isSaved);
   const [savingBm, setSavingBm] = useState(false);

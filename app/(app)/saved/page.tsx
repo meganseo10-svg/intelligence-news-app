@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { db, savedNews, newsItems, insights, translations } from "@/db";
 import { NewsCard, type FeedItem } from "@/components/feed/NewsCard";
 import { SavedNote } from "@/components/feed/SavedNote";
+import { BackButton } from "@/components/BackButton";
 
 export default async function SavedPage() {
   const supabase = createClient();
@@ -49,6 +50,7 @@ export default async function SavedPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
+      <BackButton />
       <h1 className="mb-4 text-xl font-medium">저장한 뉴스 ({rows.length})</h1>
 
       {rows.length === 0 ? (

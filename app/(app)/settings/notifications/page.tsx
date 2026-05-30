@@ -3,6 +3,7 @@ import {
   NotificationSettings,
   type NotificationSettingsValue,
 } from "@/components/settings/NotificationSettings";
+import { BackButton } from "@/components/BackButton";
 
 export default async function SettingsNotificationsPage() {
   const supabase = createClient();
@@ -27,6 +28,7 @@ export default async function SettingsNotificationsPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
+      <BackButton fallback="/settings" />
       <h1 className="mb-1 text-xl font-medium">알림 설정</h1>
       <p className="mb-6 text-sm text-muted-foreground">
         매일 아침 받을 뉴스 브리핑의 주기·시각·표시 옵션을 설정하세요.

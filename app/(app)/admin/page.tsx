@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getAdminStats } from "@/lib/admin-stats";
 import { CostChart } from "@/components/admin/CostChart";
+import { BackButton } from "@/components/BackButton";
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
@@ -35,6 +36,7 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
+      <BackButton />
       <h1 className="mb-4 text-xl font-medium">운영 대시보드</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

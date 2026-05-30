@@ -3,6 +3,7 @@ import {
   ProfileEditor,
   type ProfileEditorValue,
 } from "@/components/settings/ProfileEditor";
+import { BackButton } from "@/components/BackButton";
 
 export default async function SettingsProfilePage() {
   const supabase = createClient();
@@ -28,6 +29,7 @@ export default async function SettingsProfilePage() {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8">
+      <BackButton fallback="/settings" />
       <h1 className="mb-1 text-xl font-medium">프로필</h1>
       <p className="mb-6 text-sm text-muted-foreground">{user!.email}</p>
       <ProfileEditor initial={initial} />

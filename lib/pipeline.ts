@@ -17,7 +17,10 @@ import {
 import { createEmbedding } from "@/lib/embed";
 import { analyzeNewsWithRetry } from "@/lib/llm/analyze";
 import { collectForKeyword, type SourceKey } from "@/lib/sources";
+import { extractArticleText } from "@/lib/sources/extract";
 import type { CollectedNewsItem } from "@/lib/types";
+
+const MIN_RELEVANCE = 0.3; // 이 미만이면 무관 기사로 보고 피드에서 제외
 
 const GROUP_LABEL: Record<string, string> = {
   competitor: "경쟁사",
@@ -32,6 +35,7 @@ export interface UserFeedStats {
   afterDedup: number;
   skippedHeuristic: number;
   skippedExisting: number;
+  skippedLowRelevance: number;
   analyzed: number;
   analyzeFailed: number;
   feedItems: number;
@@ -53,6 +57,7 @@ export async function processUserFeed(
     afterDedup: 0,
     skippedHeuristic: 0,
     skippedExisting: 0,
+    skippedLowRelevance: 0,
     analyzed: 0,
     analyzeFailed: 0,
     feedItems: 0,
@@ -168,6 +173,12 @@ export async function processUserFeed(
 
     processed++;
 
+    // 전체 본문 가져오기 (실패 시 검색 스니펫으로 폴백)
+    const fullBody =
+      (await extractArticleText(item.url)) ??
+      item.body_original ??
+      item.title_original;
+
     // 신규 뉴스면 임베딩+클러스터+적재
     let newsId: string;
     if (existing) {
@@ -175,7 +186,7 @@ export async function processUserFeed(
     } else {
       try {
         const embedding = await createEmbedding(
-          `${item.title_original}\n${item.body_original ?? ""}`.slice(0, 4000),
+          `${item.title_original}\n${fullBody}`.slice(0, 4000),
         );
         const cluster = await findOrCreateCluster(embedding);
         const [inserted] = await db
@@ -187,7 +198,7 @@ export async function processUserFeed(
             publisherDomain: item.publisher_domain,
             originalLang: item.original_lang,
             titleOriginal: item.title_original,
-            bodyOriginal: item.body_original,
+            bodyOriginal: fullBody,
             thumbnailUrl: item.thumbnail_url,
             publishedAt: item.published_at ? new Date(item.published_at) : null,
             source: item.source,
@@ -221,7 +232,7 @@ export async function processUserFeed(
           published_at: item.published_at,
           original_lang: item.original_lang,
           title: item.title_original,
-          body: item.body_original ?? item.title_original,
+          body: fullBody,
         },
         keyword_matched: { keyword, group: GROUP_LABEL[group] ?? group },
       },
@@ -232,6 +243,12 @@ export async function processUserFeed(
       continue;
     }
     stats.analyzed++;
+
+    // 관련도 낮은(무관) 기사는 피드에서 제외
+    if (analysis.relevance_score < MIN_RELEVANCE) {
+      stats.skippedLowRelevance++;
+      continue;
+    }
 
     // 저장: translations(글로벌) + insights(사용자) + user_news_feed
     try {
@@ -302,6 +319,7 @@ export async function runCollectForAllUsers(opts: {
               afterDedup: 0,
               skippedHeuristic: 0,
               skippedExisting: 0,
+              skippedLowRelevance: 0,
               analyzed: 0,
               analyzeFailed: 0,
               feedItems: 0,

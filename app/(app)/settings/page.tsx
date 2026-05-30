@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 
 export default function SettingsPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
+      <BackButton />
       <h1 className="mb-6 text-xl font-medium">설정</h1>
       <div className="divide-y overflow-hidden rounded-xl border">
         <Link
