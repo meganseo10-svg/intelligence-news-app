@@ -236,11 +236,11 @@ export const env = envSchema.parse(process.env);
 #### T-014 · 키워드 관리 페이지 ⏱️ 3h
 
 **Tasks**:
-- [ ] `/settings/keywords` 페이지
-- [ ] 그룹별 키워드 목록 + 추가/삭제
-- [ ] 그룹 추가/이름 변경
-- [ ] 키워드별 소스 선택 (네이버/GNews/RSS)
-- [ ] 활성/비활성 토글
+- [x] `/settings/keywords` 페이지 (+ /settings 인덱스)
+- [x] 그룹별 키워드 목록 + 추가/삭제 (POST/DELETE /api/keywords)
+- [x] 그룹 추가/이름 변경/삭제 (POST/PUT/DELETE /api/keyword-groups)
+- [x] 키워드별 소스 선택 (네이버/GNews/RSS 토글, PUT /api/keywords/[id])
+- [x] 활성/비활성 토글
 
 ---
 
