@@ -342,10 +342,11 @@ headers: {
 #### T-022 · OpenAI 임베딩 ⏱️ 2h
 
 **Tasks**:
-- [ ] `lib/embed.ts`
-- [ ] `createEmbedding(text)`, `createEmbeddings(texts[])` (배치)
-- [ ] 비용 로깅 (`api_usage_log`)
-- [ ] 텍스트 길이 제한 (8000자)
+- [x] `lib/embed.ts`
+- [x] `createEmbedding(text)`, `createEmbeddings(texts[])` (배치)
+- [x] 비용 로깅 (`api_usage_log`, text-embedding-3-small $0.02/1M)
+- [x] 텍스트 길이 제한 (8000자)
+- [~] 라이브 검증: OpenAI 크레딧 충전 후 재확인 예정 (현재 429 quota)
 
 ---
 
