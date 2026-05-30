@@ -112,13 +112,14 @@ export const env = envSchema.parse(process.env);
 #### T-004 · Vercel 자동 배포 연결 ⏱️ 1h
 
 **Tasks**:
-- [ ] GitHub repo 첫 푸시
-- [ ] Vercel에서 import → 프로젝트 생성
-- [ ] Vercel 환경변수 모두 등록 (Production + Preview)
-- [ ] Preview deploy 동작 확인
-- [ ] (선택) 도메인 연결
+- [x] GitHub repo 첫 푸시 (github.com/meganseo10-svg/intelligence-news-app)
+- [x] Vercel에서 import → 프로젝트 생성
+- [x] Vercel 환경변수 모두 등록 (.env.local 일괄 붙여넣기)
+- [x] 배포 동작 확인 (https://intelligence-news-app.vercel.app — /, /login, /terms 200)
+- [ ] NEXT_PUBLIC_APP_URL을 배포 URL로 변경 + redeploy (공유/이메일 링크용)
+- [ ] (선택) 커스텀 도메인 연결
 
-**Done When**: GitHub push → Vercel preview URL 자동 생성.
+**Done When**: ✅ 배포 URL 정상 동작. (push → Vercel 자동 재배포 연결됨)
 
 ---
 
