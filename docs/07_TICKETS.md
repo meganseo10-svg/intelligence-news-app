@@ -273,12 +273,13 @@ export const env = envSchema.parse(process.env);
 #### T-017 · 네이버 검색 API 어댑터 ⏱️ 3h
 
 **Tasks**:
-- [ ] `lib/sources/naver.ts`
-- [ ] `searchNaverNews(keyword, options)` → `NewsItem[]`
-- [ ] HTML 태그 제거 (`<b>` 등 응답에 포함됨)
-- [ ] 본문은 link로 한 번 더 fetch (Mozilla Readability 또는 단순 추출)
-- [ ] 레이트 리미트: 초당 10건 이하 (`p-limit` 사용)
-- [ ] 에러 핸들링 + 재시도
+- [x] `lib/sources/naver.ts` (+ `lib/types.ts` NewsItem/CollectedNewsItem)
+- [x] `searchNaverNews(keyword, options)` → `CollectedNewsItem[]`
+- [x] HTML 태그 + 엔티티 제거
+- [~] 본문은 link로 한 번 더 fetch → 보류, 우선 description 사용 (전체본문 fetch는 추후)
+- [x] 레이트 리미트 (`p-limit`, 동시 5)
+- [x] 에러 핸들링 + 재시도 (429/5xx 지수 백오프)
+- [x] 실제 API 검증: "오픈AI" 검색 5건 수신 확인
 
 **API 사용법**:
 ```typescript
