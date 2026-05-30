@@ -27,15 +27,18 @@ export default function SettingsPage() {
           </div>
           <span className="text-xs text-muted-foreground">준비중</span>
         </div>
-        <div className="flex items-center justify-between px-4 py-3 opacity-50">
+        <Link
+          href="/settings/notifications"
+          className="flex items-center justify-between px-4 py-3 hover:bg-muted/50"
+        >
           <div>
             <div className="text-sm font-medium">알림</div>
             <div className="text-xs text-muted-foreground">
-              발송 주기·시각·채널
+              발송 주기·시각·표시 옵션
             </div>
           </div>
-          <span className="text-xs text-muted-foreground">준비중</span>
-        </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </Link>
       </div>
     </main>
   );

@@ -575,9 +575,10 @@ const result = await db.execute(sql`
 #### T-041 · 알림 설정 화면 ⏱️ 3h
 
 **Tasks**:
-- [ ] `/settings/notifications` 페이지 — `06_UI_SPEC.md` 그대로
-- [ ] 주기·시각·채널·표시 옵션
-- [ ] `PUT /api/notification-settings`
+- [x] `/settings/notifications` 페이지 (설정 인덱스에서 링크 활성화)
+- [x] 주기(데일리/위클리/긴급)·요일·시각·표시 옵션 3종
+- [x] `GET/PUT /api/notification-settings` (upsert, 검증 완료)
+- [~] 채널(Slack/Discord) 연결은 T-044~ 에서
 
 ---
 
