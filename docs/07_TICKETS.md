@@ -221,11 +221,11 @@ export const env = envSchema.parse(process.env);
 #### T-013 · 온보딩 3단계: 키워드 등록 ⏱️ 3h
 
 **Tasks**:
-- [ ] 4개 그룹 카드 (경쟁사/업계/제품/일반)
-- [ ] 태그 입력 (그룹별)
-- [ ] "AI 추천 키워드" 버튼 → `POST /api/keywords/suggest`
-- [ ] 추천 결과 모달 → 체크박스 선택 → 추가
-- [ ] 완료 시 `onboarding_completed = true` 업데이트
+- [x] 4개 그룹 카드 (경쟁사/업계/제품/일반)
+- [x] 태그 입력 (그룹별, 전체 최대 30개)
+- [~] "AI 추천 키워드" 버튼 → 비활성("준비중"), API는 T-025에서 구현
+- [ ] 추천 결과 모달 → 체크박스 선택 → 추가 (T-025)
+- [x] 완료 시 `onboarding_completed = true` 업데이트 (finishOnboarding 서버 액션)
 
 **Note**: API `/api/keywords/suggest`는 T-025와 함께 구현 (LLM 호출).
 
