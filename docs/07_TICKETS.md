@@ -473,9 +473,10 @@ const result = await db.execute(sql`
 #### T-032 · 운영 대시보드 ⏱️ 3h
 
 **Tasks**:
-- [ ] `/admin` 페이지 (관리자만)
-- [ ] 일별 수집 건수, LLM 비용, 활성 사용자
-- [ ] Recharts로 간단한 차트
+- [x] `/admin` 페이지 (관리자 이메일만, 미들웨어 보호 + 페이지 게이트)
+- [x] 활성 사용자·오늘 피드·오늘/이번달 비용·에러 통계 (GET /api/admin/stats)
+- [x] Recharts 7일 API 호출 차트
+- [x] 검증: 통계 집계 실행 ($0.0071, 9건 등)
 
 ---
 

@@ -2,7 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** 로그인해야만 접근 가능한 경로들 */
-const PROTECTED_PREFIXES = ["/feed", "/saved", "/settings", "/onboarding"];
+const PROTECTED_PREFIXES = [
+  "/feed",
+  "/saved",
+  "/settings",
+  "/onboarding",
+  "/admin",
+];
 
 /**
  * 매 요청마다 Supabase 세션 쿠키를 갱신하고,
