@@ -189,10 +189,10 @@ export const env = envSchema.parse(process.env);
 #### T-010 · 기본 레이아웃 + 헤더 ⏱️ 2h
 
 **Tasks**:
-- [ ] `app/(app)/layout.tsx` — 인증된 사용자용 레이아웃
-- [ ] `components/layout/Header.tsx` — `06_UI_SPEC.md` 참고
-- [ ] 다크모드 토글 (next-themes)
-- [ ] 모바일 반응형
+- [x] `app/(app)/layout.tsx` — 인증된 사용자용 레이아웃 (user 조회 + Header)
+- [x] `components/layout/Header.tsx` — 로고/검색/알림/설정/아바타 드롭다운(프로필·설정·로그아웃)
+- [x] 다크모드 토글 (next-themes + ThemeProvider + ThemeToggle)
+- [x] 모바일 반응형 (sticky, backdrop-blur, max-w-3xl)
 
 ---
 
