@@ -226,6 +226,11 @@ export async function processUserFeed(
           products: profile.products ?? [],
           target_customers: profile.targetCustomers ?? [],
           competitors,
+          trendFocus: profile.trendFocus,
+          strengths: profile.strengths,
+          weaknesses: profile.weaknesses,
+          salesFocus: profile.salesFocus,
+          threats: profile.threats,
         },
         news: {
           publisher: item.publisher,

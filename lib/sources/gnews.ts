@@ -15,7 +15,7 @@ interface GNewsArticle {
 }
 
 export interface GNewsSearchOptions {
-  lang?: string; // 'en' | 'ko' | ... 기본 en
+  lang?: string; // 지정하면 해당 언어, 미지정 시 전 세계(모든 언어) 결과
   max?: number; // 무료 티어 최대 10
 }
 
@@ -41,11 +41,11 @@ export async function searchGNews(
     return [];
   }
 
-  const lang = options.lang ?? "en";
   const max = Math.min(options.max ?? 10, 10);
+  const langParam = options.lang ? `&lang=${options.lang}` : "";
   const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(
     keyword,
-  )}&lang=${lang}&max=${max}&apikey=${apiKey}`;
+  )}${langParam}&max=${max}&apikey=${apiKey}`;
 
   const res = await fetch(url);
   if (!res.ok) {
@@ -64,7 +64,7 @@ export async function searchGNews(
       url_canonical: canonical(a.url),
       publisher: a.source?.name ?? domain ?? "gnews",
       publisher_domain: domain,
-      original_lang: lang,
+      original_lang: options.lang ?? "en",
       title_original: a.title,
       body_original: a.description || null,
       thumbnail_url: a.image || null,

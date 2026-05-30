@@ -30,7 +30,12 @@ export async function collectForKeyword(
   if (sources.includes("gnews"))
     tasks.push({
       source: "gnews",
-      run: () => searchGNews(keyword, { lang: options.gnewsLang ?? "en" }),
+      // 언어 미지정 → 전 세계(모든 언어) 결과로 글로벌 커버리지 강화
+      run: () =>
+        searchGNews(
+          keyword,
+          options.gnewsLang ? { lang: options.gnewsLang } : {},
+        ),
     });
   if (sources.includes("rss"))
     tasks.push({ source: "rss", run: () => searchRss(keyword) });

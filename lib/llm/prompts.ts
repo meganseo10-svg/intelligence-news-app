@@ -30,6 +30,12 @@ export interface AnalysisInput {
     products: string[];
     target_customers: string[];
     competitors: string[];
+    // 시사점 생성 기준 (선택)
+    trendFocus?: string | null;
+    strengths?: string | null;
+    weaknesses?: string | null;
+    salesFocus?: string | null;
+    threats?: string | null;
   };
   news: {
     publisher: string;
@@ -45,13 +51,24 @@ export interface AnalysisInput {
 }
 
 export function buildAnalysisPrompt(input: AnalysisInput): string {
-  return `# 사용자 컨텍스트
-회사: ${input.user_context.company}
-업종: ${input.user_context.industry}
-주력 제품: ${input.user_context.products.join(", ")}
-타겟 고객: ${input.user_context.target_customers.join(", ")}
-경쟁사: ${input.user_context.competitors.join(", ")}
+  const c = input.user_context;
+  const criteria = [
+    c.trendFocus && `주목 트렌드·방향: ${c.trendFocus}`,
+    c.strengths && `우리 강점: ${c.strengths}`,
+    c.weaknesses && `우리 약점: ${c.weaknesses}`,
+    c.salesFocus && `영업 기회 관점: ${c.salesFocus}`,
+    c.threats && `경계할 위협: ${c.threats}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 
+  return `# 사용자 컨텍스트
+회사: ${c.company}
+업종: ${c.industry}
+주력 제품: ${c.products.join(", ")}
+타겟 고객: ${c.target_customers.join(", ")}
+경쟁사: ${c.competitors.join(", ")}
+${criteria ? `\n# 시사점 작성 기준 (반드시 반영)\n${criteria}\n` : ""}
 # 처리할 뉴스
 - 매체: ${input.news.publisher}
 - 발행: ${input.news.published_at}

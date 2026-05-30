@@ -13,7 +13,7 @@ export default async function SettingsProfilePage() {
 
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("company, industry, company_size, products, target_customers")
+    .select("*")
     .eq("user_id", user!.id)
     .single();
 
@@ -25,6 +25,11 @@ export default async function SettingsProfilePage() {
     company_size: profile?.company_size ?? "",
     products: profile?.products ?? [],
     target_customers: profile?.target_customers ?? [],
+    trend_focus: profile?.trend_focus ?? "",
+    strengths: profile?.strengths ?? "",
+    weaknesses: profile?.weaknesses ?? "",
+    sales_focus: profile?.sales_focus ?? "",
+    threats: profile?.threats ?? "",
   };
 
   return (

@@ -94,7 +94,7 @@ export function ShareModal({
       kind === "facebook"
         ? `https://www.facebook.com/sharer/sharer.php?u=${enc}`
         : `https://twitter.com/intent/tweet?url=${enc}&text=${encodeURIComponent(target.title)}`;
-    window.open(sns, "_blank", "noopener,noreferrer,width=600,height=500");
+    window.open(sns, "_blank");
   }
 
   return (

@@ -10,6 +10,12 @@ const profileSchema = z.object({
   target_customers: z.array(z.string()).optional().default([]),
   timezone: z.string().optional(),
   preferred_lang: z.enum(["ko", "en"]).optional(),
+  // 시사점 기준 (선택)
+  trend_focus: z.string().optional(),
+  strengths: z.string().optional(),
+  weaknesses: z.string().optional(),
+  sales_focus: z.string().optional(),
+  threats: z.string().optional(),
 });
 
 export async function GET() {

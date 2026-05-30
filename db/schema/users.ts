@@ -14,6 +14,12 @@ export const userProfiles = pgTable("user_profiles", {
   targetCustomers: text("target_customers").array().default([]),
   timezone: text("timezone").default("Asia/Seoul"),
   preferredLang: text("preferred_lang").default("ko"),
+  // 시사점 생성 기준
+  trendFocus: text("trend_focus"),
+  strengths: text("strengths"),
+  weaknesses: text("weaknesses"),
+  salesFocus: text("sales_focus"),
+  threats: text("threats"),
   onboardingCompleted: boolean("onboarding_completed").default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),

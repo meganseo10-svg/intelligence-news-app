@@ -4,6 +4,7 @@ import { canonical, hostname } from "./util";
 
 /** 초기 RSS 피드 목록 (추후 DB/관리자 설정으로 이동 가능) */
 export const RSS_FEEDS: { name: string; url: string }[] = [
+  // 글로벌 기술·비즈니스 매체
   { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
   { name: "The Verge", url: "https://www.theverge.com/rss/index.xml" },
   {
@@ -11,6 +12,22 @@ export const RSS_FEEDS: { name: string; url: string }[] = [
     url: "https://feeds.arstechnica.com/arstechnica/index",
   },
   { name: "VentureBeat", url: "https://venturebeat.com/feed/" },
+  { name: "Wired", url: "https://www.wired.com/feed/rss" },
+  { name: "Engadget", url: "https://www.engadget.com/rss.xml" },
+  {
+    name: "BBC Technology",
+    url: "https://feeds.bbci.co.uk/news/technology/rss.xml",
+  },
+  {
+    name: "BBC Business",
+    url: "https://feeds.bbci.co.uk/news/business/rss.xml",
+  },
+  {
+    name: "MIT Technology Review",
+    url: "https://www.technologyreview.com/feed/",
+  },
+  { name: "Hacker News", url: "https://hnrss.org/frontpage" },
+  { name: "ZDNET", url: "https://www.zdnet.com/news/rss.xml" },
 ];
 
 const parser = new Parser({ timeout: 10000 });

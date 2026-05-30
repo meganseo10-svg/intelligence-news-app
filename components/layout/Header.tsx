@@ -108,6 +108,9 @@ export function Header({ email, displayName, isAdmin }: HeaderProps) {
                 <Link href="/saved">저장한 뉴스</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
+                <Link href="/insights">트렌드 인사이트</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href="/settings">설정</Link>
               </DropdownMenuItem>
               {isAdmin && (
