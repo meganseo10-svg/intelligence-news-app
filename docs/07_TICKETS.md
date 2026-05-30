@@ -155,9 +155,9 @@ export const env = envSchema.parse(process.env);
 #### T-007 · 시드 데이터 ⏱️ 1h
 
 **Tasks**:
-- [ ] `scripts/seed.ts` — 테스트용 사용자 1명, 키워드 그룹 4개, 뉴스 10건
-- [ ] `pnpm seed` 명령 실행 시 데이터 삽입
-- [ ] 멱등성 보장 (기존 데이터 있으면 skip 또는 upsert)
+- [x] `scripts/seed.ts` — 테스트 유저 1명(test@intelligence.local), 키워드그룹 4개, 뉴스 10건, 시사점/피드 10건
+- [x] `pnpm seed` 명령 실행 시 데이터 삽입
+- [x] 멱등성 보장 (2회 실행해도 개수 동일: onConflictDoNothing + 그룹 재생성)
 
 ---
 
