@@ -319,10 +319,11 @@ headers: {
 #### T-020 · 통합 수집기 ⏱️ 2h
 
 **Tasks**:
-- [ ] `lib/sources/index.ts` — `collectForKeyword(keyword, sources[])` → 통합 결과
-- [ ] 어댑터 병렬 호출 (`Promise.allSettled`)
-- [ ] 한 어댑터 실패가 전체 실패로 번지지 않게
-- [ ] 결과 통합 + 기본 dedup (URL 기준)
+- [x] `lib/sources/index.ts` — `collectForKeyword(keyword, sources[])` → 통합 결과
+- [x] 어댑터 병렬 호출 (`Promise.allSettled`)
+- [x] 한 어댑터 실패가 전체 실패로 번지지 않게 (소스별 격리 + 경고 로그)
+- [x] 결과 통합 + 기본 dedup (url_canonical 기준)
+- [x] 검증: "AI" 54건 (naver20+gnews10+rss24) 통합·중복제거
 
 ---
 
@@ -331,10 +332,10 @@ headers: {
 #### T-021 · URL 정규화 + 1차 dedup ⏱️ 2h
 
 **Tasks**:
-- [ ] `lib/dedup.ts` — `canonicalizeUrl(url)` 함수
-- [ ] 쿼리 파라미터 제거 (`utm_*`, `ref`, `source` 등)
-- [ ] 모바일 URL 통합 (`m.naver.com` → `naver.com`)
-- [ ] DB upsert: `url_canonical`이 unique key
+- [x] `lib/dedup.ts` — `canonicalizeUrl(url)` 함수
+- [x] 추적 쿼리 파라미터 제거 (`utm_*`, `ref`, `source`, `fbclid` 등), 나머지 쿼리는 유지
+- [x] 모바일 URL 통합 (`m.`/`amp.`/`www.` 서브도메인 제거)
+- [x] DB upsert: `url_canonical` unique key (스키마에 unique 제약 존재 — 적재는 T-029)
 
 ---
 
