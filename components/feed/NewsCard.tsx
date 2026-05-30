@@ -7,8 +7,10 @@ import {
   ExternalLink,
   Languages,
   Lightbulb,
+  Share2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ShareModal } from "./ShareModal";
 
 const CATEGORY_LABEL: Record<string, string> = {
   competitor: "경쟁사",
@@ -59,6 +61,7 @@ export function NewsCard({ item }: { item: FeedItem }) {
   const [copied, setCopied] = useState(false);
   const [saved, setSaved] = useState(!!item.isSaved);
   const [savingBm, setSavingBm] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   async function toggleSave() {
     setSavingBm(true);
@@ -110,108 +113,128 @@ export function NewsCard({ item }: { item: FeedItem }) {
   }
 
   return (
-    <article className="rounded-xl border bg-background p-4">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        {insight && (insight.importanceScore ?? 0) >= 0.8 && (
-          <Badge variant="destructive">중요</Badge>
-        )}
-        {item.groupCategory ? (
-          <Badge variant="secondary">
-            {CATEGORY_LABEL[item.groupCategory] ?? item.groupCategory}
-          </Badge>
-        ) : insight?.category ? (
-          <Badge variant="secondary">{insight.category}</Badge>
-        ) : null}
-        <span className="text-xs text-muted-foreground">
-          {news.publisher} · {relativeTime(news.publishedAt)}
-        </span>
-        {hasTranslation && (
-          <Badge variant="outline" className="ml-auto">
-            <Languages className="mr-1 h-3 w-3" />
-            {news.originalLang.toUpperCase()}→KO
-          </Badge>
-        )}
-      </div>
-
-      <a
-        href={news.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group"
-      >
-        <h3 className="mb-1.5 text-base font-medium leading-snug group-hover:underline">
-          {title}
-        </h3>
-      </a>
-      {summary && (
-        <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
-          {summary}
-        </p>
-      )}
-
-      {insight?.salesOpportunity && (
-        <div className="mb-3 rounded-lg bg-muted p-3">
-          <div className="mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground">
-            <Lightbulb className="h-3 w-3" />내 비즈니스 시사점
-          </div>
-          <div className="text-sm leading-relaxed">
-            <span className="text-muted-foreground">영업 기회:</span>{" "}
-            {insight.salesOpportunity}
-          </div>
-          {insight.targetCustomer && (
-            <div className="mt-1 text-sm leading-relaxed">
-              <span className="text-muted-foreground">타겟:</span>{" "}
-              {insight.targetCustomer}
-            </div>
+    <>
+      <article className="rounded-xl border bg-background p-4">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          {insight && (insight.importanceScore ?? 0) >= 0.8 && (
+            <Badge variant="destructive">중요</Badge>
           )}
-          {insight.riskSignal && (
-            <div className="mt-1 text-sm leading-relaxed">
-              <span className="text-muted-foreground">리스크:</span>{" "}
-              {insight.riskSignal}
-            </div>
+          {item.groupCategory ? (
+            <Badge variant="secondary">
+              {CATEGORY_LABEL[item.groupCategory] ?? item.groupCategory}
+            </Badge>
+          ) : insight?.category ? (
+            <Badge variant="secondary">{insight.category}</Badge>
+          ) : null}
+          <span className="text-xs text-muted-foreground">
+            {news.publisher} · {relativeTime(news.publishedAt)}
+          </span>
+          {hasTranslation && (
+            <Badge variant="outline" className="ml-auto">
+              <Languages className="mr-1 h-3 w-3" />
+              {news.originalLang.toUpperCase()}→KO
+            </Badge>
           )}
         </div>
-      )}
 
-      <div className="flex items-center gap-4 text-xs text-muted-foreground">
         <a
           href={news.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center hover:text-foreground"
+          className="group"
         >
-          <ExternalLink className="mr-1 h-3.5 w-3.5" />
-          원문
+          <h3 className="mb-1.5 text-base font-medium leading-snug group-hover:underline">
+            {title}
+          </h3>
         </a>
-        {hasTranslation && (
-          <button
-            onClick={() => setShowOriginal((v) => !v)}
+        {summary && (
+          <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+            {summary}
+          </p>
+        )}
+
+        {insight?.salesOpportunity && (
+          <div className="mb-3 rounded-lg bg-muted p-3">
+            <div className="mb-1 flex items-center gap-1 text-xs font-medium text-muted-foreground">
+              <Lightbulb className="h-3 w-3" />내 비즈니스 시사점
+            </div>
+            <div className="text-sm leading-relaxed">
+              <span className="text-muted-foreground">영업 기회:</span>{" "}
+              {insight.salesOpportunity}
+            </div>
+            {insight.targetCustomer && (
+              <div className="mt-1 text-sm leading-relaxed">
+                <span className="text-muted-foreground">타겟:</span>{" "}
+                {insight.targetCustomer}
+              </div>
+            )}
+            {insight.riskSignal && (
+              <div className="mt-1 text-sm leading-relaxed">
+                <span className="text-muted-foreground">리스크:</span>{" "}
+                {insight.riskSignal}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <a
+            href={news.url}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center hover:text-foreground"
           >
-            <Languages className="mr-1 h-3.5 w-3.5" />
-            {showOriginal ? "번역 보기" : "원문 보기"}
+            <ExternalLink className="mr-1 h-3.5 w-3.5" />
+            원문
+          </a>
+          {hasTranslation && (
+            <button
+              onClick={() => setShowOriginal((v) => !v)}
+              className="inline-flex items-center hover:text-foreground"
+            >
+              <Languages className="mr-1 h-3.5 w-3.5" />
+              {showOriginal ? "번역 보기" : "원문 보기"}
+            </button>
+          )}
+          <button
+            onClick={copy}
+            className="inline-flex items-center hover:text-foreground"
+          >
+            <Copy className="mr-1 h-3.5 w-3.5" />
+            {copied ? "복사됨!" : "복사"}
           </button>
-        )}
-        <button
-          onClick={copy}
-          className="inline-flex items-center hover:text-foreground"
-        >
-          <Copy className="mr-1 h-3.5 w-3.5" />
-          {copied ? "복사됨!" : "복사"}
-        </button>
-        <button
-          onClick={toggleSave}
-          disabled={savingBm}
-          className={`ml-auto inline-flex items-center hover:text-foreground ${
-            saved ? "text-foreground" : ""
-          }`}
-        >
-          <Bookmark
-            className={`mr-1 h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
-          />
-          {saved ? "저장됨" : "저장"}
-        </button>
-      </div>
-    </article>
+          <button
+            onClick={() => setShareOpen(true)}
+            className="inline-flex items-center hover:text-foreground"
+          >
+            <Share2 className="mr-1 h-3.5 w-3.5" />
+            공유
+          </button>
+          <button
+            onClick={toggleSave}
+            disabled={savingBm}
+            className={`ml-auto inline-flex items-center hover:text-foreground ${
+              saved ? "text-foreground" : ""
+            }`}
+          >
+            <Bookmark
+              className={`mr-1 h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
+            />
+            {saved ? "저장됨" : "저장"}
+          </button>
+        </div>
+      </article>
+      <ShareModal
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        target={{
+          id: news.id,
+          title: item.titleTranslated ?? news.titleOriginal,
+          url: news.url,
+          summary: item.summaryTranslated ?? "",
+          salesOpportunity: insight?.salesOpportunity ?? null,
+        }}
+      />
+    </>
   );
 }

@@ -552,21 +552,21 @@ const result = await db.execute(sql`
 #### T-039 · 공유 모달 ⏱️ 4h
 
 **Tasks**:
-- [ ] `components/feed/ShareModal.tsx` — `06_UI_SPEC.md` 참고
-- [ ] 포함 내용 선택
-- [ ] 공유 방식 8가지
-- [ ] Web Share API 통합
+- [x] `components/feed/ShareModal.tsx` (NewsCard 공유 버튼 연결)
+- [x] 포함 내용 선택 (시사점 포함 토글) + 만료 선택
+- [x] 공유 방식: 본문 복사 / 메일 / 기기공유 / 공개 링크 복사
+- [x] Web Share API 통합 (navigator.share, 미지원 시 복사)
 
 ---
 
 #### T-040 · 공개 링크 시스템 ⏱️ 3h
 
 **Tasks**:
-- [ ] `POST /api/shared-links`
-- [ ] `GET /api/shared-links/public/[token]` (인증 불필요)
-- [ ] `app/s/[token]/page.tsx` 공개 페이지
-- [ ] OG 메타태그
-- [ ] 만료 검증
+- [x] `POST /api/shared-links` (nanoid 토큰 + 스냅샷 저장)
+- [~] 공개 조회는 `/s/[token]` 페이지가 직접 DB 조회 (별도 public API 생략)
+- [x] `app/s/[token]/page.tsx` 공개 페이지 (인증 불필요, 200 확인)
+- [x] OG 메타태그 (generateMetadata)
+- [x] 만료 검증 + view_count 증가
 
 ---
 
