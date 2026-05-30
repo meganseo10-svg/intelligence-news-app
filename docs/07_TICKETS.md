@@ -405,8 +405,9 @@ const result = await db.execute(sql`
 #### T-027 · 사전 필터링 휴리스틱 ⏱️ 1h
 
 **Tasks**:
-- [ ] `lib/dedup.ts` — `shouldSkipForLLM(news)` 함수
-- [ ] `04_LLM_PROMPTS.md`의 규칙 적용 (광고성, 너무 짧은 본문 등)
+- [x] `lib/dedup.ts` — `shouldSkipForLLM(news)` 함수
+- [x] `04_LLM_PROMPTS.md`의 규칙 적용 (광고성·짧은 본문·저품질 매체) — 4케이스 검증
+  - (본문 최소길이는 스니펫 기준 60자로 완화; 전체본문 fetch는 추후)
 
 ---
 

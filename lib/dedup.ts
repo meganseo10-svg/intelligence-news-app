@@ -1,5 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { db, newsClusters } from "@/db";
+import type { CollectedNewsItem } from "@/lib/types";
 
 // 제거할 추적용 쿼리 파라미터 패턴
 const TRACKING_PARAM = [
@@ -84,4 +85,46 @@ export async function findOrCreateCluster(
     .values({ newsCount: 1 })
     .returning({ id: newsClusters.id });
   return { clusterId: created.id, isNew: true };
+}
+
+// ── 사전 필터링 휴리스틱 (LLM 호출 전 노이즈 거르기 = 비용 절감) ──────────
+
+// 본문(스니펫) 최소 길이. 사양서는 200(전체 본문 기준)이나,
+// 현재는 검색 API의 요약문을 쓰므로 너무 짧은 것만 거르도록 완화.
+const MIN_BODY_LENGTH = 60;
+
+const AD_KEYWORDS = [
+  "이벤트",
+  "프로모션",
+  "할인",
+  "쿠폰",
+  "추첨",
+  "출시 기념",
+  "런칭 이벤트",
+  "구매 시",
+  "사은품",
+];
+
+const LOW_QUALITY_DOMAINS = ["example-spam.com"];
+
+/**
+ * LLM 분석을 건너뛸지 판단 (true = 건너뜀).
+ * - 본문이 너무 짧음 / 광고성 제목 / 저품질 매체
+ */
+export function shouldSkipForLLM(
+  news: Pick<
+    CollectedNewsItem,
+    "title_original" | "body_original" | "publisher_domain"
+  >,
+): boolean {
+  if (!news.body_original || news.body_original.length < MIN_BODY_LENGTH) {
+    return true;
+  }
+  if (AD_KEYWORDS.some((kw) => news.title_original.includes(kw))) {
+    return true;
+  }
+  if (LOW_QUALITY_DOMAINS.includes(news.publisher_domain ?? "")) {
+    return true;
+  }
+  return false;
 }
