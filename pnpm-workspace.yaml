@@ -2,3 +2,4 @@ onlyBuiltDependencies: []
 allowBuilds:
   unrs-resolver: false
   msw: false
+  esbuild: true

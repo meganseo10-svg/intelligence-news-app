@@ -46,13 +46,13 @@
 **Goal**: 빈 폴더에서 Next.js 14 App Router 프로젝트가 동작.
 
 **Tasks**:
-- [ ] `pnpm create next-app@latest . --typescript --tailwind --app --src-dir=false`
-- [ ] shadcn/ui 초기화: `pnpm dlx shadcn@latest init`
-- [ ] 기본 컴포넌트 설치: button, input, label, dialog, select, toast, badge, tabs
-- [ ] `02_TECH_SPEC.md`의 폴더 구조 그대로 생성
-- [ ] ESLint + Prettier 설정 (`02_TECH_SPEC.md`의 `package.json` 참고)
-- [ ] Husky + lint-staged 설정
-- [ ] `pnpm dev` 동작 확인
+- [x] `pnpm create next-app@14 .` (Next.js 14, TS, Tailwind, ESLint, no src-dir)
+- [x] shadcn/ui 초기화: `shadcn@2.1.8 init` (Tailwind 3 호환 버전 사용)
+- [x] 기본 컴포넌트 설치: button, input, label, dialog, select, toast, badge, tabs, card
+- [x] `02_TECH_SPEC.md`의 폴더 구조 그대로 생성
+- [x] ESLint + Prettier 설정
+- [x] Husky + lint-staged 설정
+- [x] `pnpm build` 통과 확인 (타입체크 포함)
 
 **Done When**: `localhost:3000` 접속 → Next.js 기본 페이지 표시.
 
@@ -63,10 +63,10 @@
 **Goal**: 모든 환경변수가 Zod로 검증되고 타입 안전하게 사용 가능.
 
 **Tasks**:
-- [ ] `.env.local` 작성 (사용자에게 키 받기)
-- [ ] `.env.example` 작성 (`02_TECH_SPEC.md` 참고)
-- [ ] `.gitignore`에 `.env.local` 포함 확인
-- [ ] `lib/env.ts` 생성 — Zod로 모든 환경변수 검증
+- [x] `.env.local` 작성 (Supabase·Anthropic·CRON_SECRET 입력 완료)
+- [x] `.env.example` 작성 (`02_TECH_SPEC.md` 참고)
+- [x] `.gitignore`에 `.env.local` 포함 확인 (git check-ignore 통과)
+- [x] `lib/env.ts` 생성 — Zod 검증 (1주차 키 필수 / 2~3주차 키 선택)
 
 ```typescript
 import { z } from "zod";
