@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Newspaper, Search, Settings } from "lucide-react";
+import { Bell, Bookmark, Newspaper, Search, Settings } from "lucide-react";
 import { signOut } from "@/lib/actions/auth";
 import { ThemeToggle } from "./ThemeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -18,9 +18,10 @@ import {
 interface HeaderProps {
   email?: string;
   displayName?: string;
+  isAdmin?: boolean;
 }
 
-export function Header({ email, displayName }: HeaderProps) {
+export function Header({ email, displayName, isAdmin }: HeaderProps) {
   const initial = (displayName || email || "U").charAt(0).toUpperCase();
 
   return (
@@ -33,20 +34,37 @@ export function Header({ email, displayName }: HeaderProps) {
 
         <nav className="flex items-center gap-1 text-muted-foreground">
           <Button
+            asChild
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            aria-label="검색"
+            aria-label="피드/검색"
           >
-            <Search className="h-5 w-5" />
+            <Link href="/feed">
+              <Search className="h-5 w-5" />
+            </Link>
           </Button>
           <Button
+            asChild
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            aria-label="알림"
+            aria-label="저장한 뉴스"
           >
-            <Bell className="h-5 w-5" />
+            <Link href="/saved">
+              <Bookmark className="h-5 w-5" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            aria-label="알림 설정"
+          >
+            <Link href="/settings/notifications">
+              <Bell className="h-5 w-5" />
+            </Link>
           </Button>
           <Button
             asChild
@@ -87,8 +105,16 @@ export function Header({ email, displayName }: HeaderProps) {
                 <Link href="/settings/profile">프로필</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
+                <Link href="/saved">저장한 뉴스</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href="/settings">설정</Link>
               </DropdownMenuItem>
+              {isAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link href="/admin">관리자 대시보드</Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <form action={signOut}>
                 <DropdownMenuItem asChild>

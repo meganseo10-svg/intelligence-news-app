@@ -19,14 +19,16 @@ export default function SettingsPage() {
           <ChevronRight className="h-4 w-4 text-muted-foreground" />
         </Link>
 
-        {/* 아래 항목은 이후 티켓에서 구현 (T-041 등) */}
-        <div className="flex items-center justify-between px-4 py-3 opacity-50">
+        <Link
+          href="/settings/profile"
+          className="flex items-center justify-between px-4 py-3 hover:bg-muted/50"
+        >
           <div>
             <div className="text-sm font-medium">프로필</div>
             <div className="text-xs text-muted-foreground">회사 정보 수정</div>
           </div>
-          <span className="text-xs text-muted-foreground">준비중</span>
-        </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </Link>
         <Link
           href="/settings/notifications"
           className="flex items-center justify-between px-4 py-3 hover:bg-muted/50"

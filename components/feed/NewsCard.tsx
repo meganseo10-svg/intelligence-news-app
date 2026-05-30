@@ -67,16 +67,18 @@ export function NewsCard({ item }: { item: FeedItem }) {
     setSavingBm(true);
     try {
       if (saved) {
-        await fetch(`/api/saved/${news.id}`, { method: "DELETE" });
-        setSaved(false);
+        const res = await fetch(`/api/saved/${news.id}`, { method: "DELETE" });
+        if (res.ok) setSaved(false);
       } else {
-        await fetch("/api/saved", {
+        const res = await fetch("/api/saved", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ news_id: news.id }),
         });
-        setSaved(true);
+        if (res.ok) setSaved(true);
       }
+    } catch {
+      /* 네트워크 오류 무시 */
     } finally {
       setSavingBm(false);
     }

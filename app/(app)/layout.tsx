@@ -28,10 +28,15 @@ export default async function AppLayout({
   }
 
   const displayName = user.user_metadata?.display_name as string | undefined;
+  const admins = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const isAdmin = !!user.email && admins.includes(user.email);
 
   return (
     <div className="min-h-dvh">
-      <Header email={user.email} displayName={displayName} />
+      <Header email={user.email} displayName={displayName} isAdmin={isAdmin} />
       {children}
     </div>
   );

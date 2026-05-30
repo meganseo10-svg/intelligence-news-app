@@ -1,7 +1,5 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { and, desc, eq } from "drizzle-orm";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   db,
@@ -15,12 +13,7 @@ import {
 } from "@/db";
 import { NewsCard, type FeedItem } from "@/components/feed/NewsCard";
 import { CategoryTabs } from "@/components/feed/CategoryTabs";
-
-function addDays(dateStr: string, days: number): string {
-  const d = new Date(dateStr + "T00:00:00Z");
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
-}
+import { DateNav } from "@/components/feed/DateNav";
 
 export default async function FeedPage({
   searchParams,
@@ -126,7 +119,7 @@ export default async function FeedPage({
   }
   if (q) {
     items = items.filter((it) =>
-      `${it.news.titleOriginal} ${it.titleTranslated ?? ""}`
+      `${it.news.titleOriginal} ${it.titleTranslated ?? ""} ${it.summaryTranslated ?? ""} ${it.news.bodyOriginal ?? ""}`
         .toLowerCase()
         .includes(q),
     );
@@ -141,24 +134,9 @@ export default async function FeedPage({
             {date} · 뉴스 {all.length}건
           </p>
         </div>
-        <div className="flex items-center gap-1">
-          <Link
-            href={`/feed?date=${addDays(date, -1)}`}
-            className="rounded-md border px-2 py-1 text-sm text-muted-foreground hover:bg-muted"
-            aria-label="이전 날"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Link>
-          {date !== today && (
-            <Link
-              href={`/feed?date=${addDays(date, 1)}`}
-              className="rounded-md border px-2 py-1 text-sm text-muted-foreground hover:bg-muted"
-              aria-label="다음 날"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          )}
-        </div>
+        <Suspense fallback={null}>
+          <DateNav date={date} today={today} />
+        </Suspense>
       </div>
 
       <Suspense fallback={null}>

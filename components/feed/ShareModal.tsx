@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Link2, Share2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -37,24 +38,14 @@ export function ShareModal({
   const [expiry, setExpiry] = useState("7d");
   const [link, setLink] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  const shareText = [
-    target.title,
-    "",
-    target.summary,
-    target.salesOpportunity ? `\n💡 시사점: ${target.salesOpportunity}` : "",
-    `\n원문: ${target.url}`,
-  ].join("\n");
-  const mailto = `mailto:?subject=${encodeURIComponent(target.title)}&body=${encodeURIComponent(shareText)}`;
+  const shareText = target.summary
+    ? `${target.title}\n\n${target.summary}`
+    : target.title;
 
-  function copy(text: string, key: string) {
-    navigator.clipboard.writeText(text);
-    setCopied(key);
-    setTimeout(() => setCopied(""), 1500);
-  }
-
-  async function createLink() {
+  async function ensureLink(): Promise<string> {
+    if (link) return link;
     setLoading(true);
     try {
       const res = await fetch("/api/shared-links", {
@@ -68,22 +59,42 @@ export function ShareModal({
         }),
       });
       const j = await res.json();
-      if (res.ok) setLink(j.url);
+      if (res.ok && j.url) {
+        setLink(j.url);
+        return j.url;
+      }
     } finally {
       setLoading(false);
     }
+    return target.url;
   }
 
-  async function nativeShare() {
-    if (navigator.share) {
-      await navigator.share({
-        title: target.title,
-        text: target.summary,
-        url: link ?? target.url,
-      });
-    } else {
-      copy(link ?? target.url, "native");
+  async function shareTo(kind: "native" | "facebook" | "x" | "copy") {
+    const url = await ensureLink();
+    if (kind === "copy") {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+      return;
     }
+    if (kind === "native") {
+      if (navigator.share) {
+        await navigator
+          .share({ title: target.title, text: shareText, url })
+          .catch(() => {});
+      } else {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }
+      return;
+    }
+    const enc = encodeURIComponent(url);
+    const sns =
+      kind === "facebook"
+        ? `https://www.facebook.com/sharer/sharer.php?u=${enc}`
+        : `https://twitter.com/intent/tweet?url=${enc}&text=${encodeURIComponent(target.title)}`;
+    window.open(sns, "_blank", "noopener,noreferrer,width=600,height=500");
   }
 
   return (
@@ -108,58 +119,54 @@ export function ShareModal({
             비즈니스 시사점 포함
           </label>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
+            <span className="mr-1 self-center text-xs text-muted-foreground">
+              링크 유효기간
+            </span>
+            {EXPIRY.map((e) => (
+              <button
+                key={e.v}
+                onClick={() => setExpiry(e.v)}
+                className={`rounded-md border px-2 py-1 text-xs ${
+                  expiry === e.v ? "border-foreground" : "text-muted-foreground"
+                }`}
+              >
+                {e.l}
+              </button>
+            ))}
+          </div>
+
+          {/* SNS 공유 */}
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              onClick={() => shareTo("native")}
+              disabled={loading}
+              className="w-full"
+            >
+              <Share2 className="mr-2 h-4 w-4" />
+              {loading ? "준비 중…" : "공유하기"}
+            </Button>
             <Button
               variant="outline"
-              size="sm"
-              onClick={() => copy(shareText, "text")}
+              onClick={() => shareTo("copy")}
+              disabled={loading}
             >
-              {copied === "text" ? "복사됨!" : "본문 복사"}
+              <Link2 className="mr-2 h-4 w-4" />
+              {copied ? "복사됨!" : "링크 복사"}
             </Button>
-            <Button variant="outline" size="sm" asChild>
-              <a href={mailto}>메일</a>
+            <Button variant="outline" onClick={() => shareTo("facebook")}>
+              페이스북
             </Button>
-            <Button variant="outline" size="sm" onClick={nativeShare}>
-              기기 공유
+            <Button variant="outline" onClick={() => shareTo("x")}>
+              X (트위터)
             </Button>
           </div>
 
-          <div className="rounded-lg border p-3">
-            <div className="mb-2 text-xs font-medium text-muted-foreground">
-              공개 링크
-            </div>
-            <div className="mb-2 flex flex-wrap gap-1">
-              {EXPIRY.map((e) => (
-                <button
-                  key={e.v}
-                  onClick={() => setExpiry(e.v)}
-                  className={`rounded-md border px-2 py-1 text-xs ${
-                    expiry === e.v
-                      ? "border-foreground"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {e.l}
-                </button>
-              ))}
-            </div>
-            {link ? (
-              <div className="flex gap-2">
-                <input
-                  readOnly
-                  value={link}
-                  className="flex-1 rounded-md border bg-muted px-2 py-1 text-xs"
-                />
-                <Button size="sm" onClick={() => copy(link, "link")}>
-                  {copied === "link" ? "복사됨!" : "복사"}
-                </Button>
-              </div>
-            ) : (
-              <Button size="sm" onClick={createLink} disabled={loading}>
-                {loading ? "생성 중…" : "공개 링크 생성"}
-              </Button>
-            )}
-          </div>
+          <p className="text-xs text-muted-foreground">
+            📱 모바일에서 <b>공유하기</b>를 누르면 카카오톡·인스타그램·틱톡 등
+            설치된 앱으로 바로 공유돼요. 공유 링크는 로그인 없이 누구나 열 수
+            있어요.
+          </p>
         </div>
       </DialogContent>
     </Dialog>
