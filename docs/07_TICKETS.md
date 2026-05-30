@@ -96,11 +96,12 @@ export const env = envSchema.parse(process.env);
 #### T-003 · Supabase 클라이언트 셋업 ⏱️ 2h
 
 **Tasks**:
-- [ ] `pnpm add @supabase/supabase-js @supabase/ssr`
-- [ ] `lib/supabase/server.ts` — 서버 컴포넌트용
-- [ ] `lib/supabase/client.ts` — 클라이언트 컴포넌트용
-- [ ] `lib/supabase/middleware.ts` — 세션 자동 갱신
-- [ ] `middleware.ts` 루트에 작성, 인증 보호 라우트 정의
+- [x] `pnpm add @supabase/supabase-js @supabase/ssr`
+- [x] `lib/supabase/server.ts` — 서버 컴포넌트용
+- [x] `lib/supabase/client.ts` — 클라이언트 컴포넌트용
+- [x] `lib/supabase/middleware.ts` — 세션 자동 갱신 + 보호 라우트 리다이렉트
+- [x] `middleware.ts` 루트에 작성, 인증 보호 라우트 정의 (/feed /saved /settings /onboarding)
+- [x] 동작 검증: 비로그인 시 /feed → 307 /login 리다이렉트 확인
 
 **참고**: Supabase 공식 Next.js SSR 가이드 그대로.
 
