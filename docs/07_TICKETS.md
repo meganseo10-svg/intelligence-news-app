@@ -498,19 +498,21 @@ const result = await db.execute(sql`
 #### T-034 · 피드 데이터 로딩 ⏱️ 2h
 
 **Tasks**:
-- [ ] `app/(app)/feed/page.tsx` — Server Component
-- [ ] `user_news_feed` JOIN `news_items`, `insights`, `translations`
-- [ ] 날짜별 페이지네이션 (전날/다음날)
-- [ ] `GET /api/feed` 엔드포인트
+- [x] `app/(app)/feed/page.tsx` — Server Component (임시화면 → 실제 피드 교체)
+- [x] `user_news_feed` JOIN `news_items`, `insights`, `translations` (중요도순)
+- [x] 날짜별 페이지네이션 (전날/다음날)
+- [~] `GET /api/feed` 엔드포인트 → 페이지가 직접 쿼리(서버컴포넌트). API는 추후 필요시
+- [x] 검증: 테스트 계정 오늘 15건 조회 성공
 
 ---
 
 #### T-035 · 뉴스 카드 컴포넌트 ⏱️ 3h
 
 **Tasks**:
-- [ ] `components/feed/NewsCard.tsx` — `06_UI_SPEC.md` 그대로 구현
-- [ ] 배지, 시사점 박스, 액션 바
-- [ ] 번역 토글 (제목·요약 원문 ↔ 번역 전환)
+- [x] `components/feed/NewsCard.tsx` — 06_UI_SPEC 기반 구현
+- [x] 배지(중요/카테고리/번역), 시사점 박스(영업기회·타겟·리스크), 액션 바(원문·복사)
+- [x] 번역 토글 (원문 ↔ 번역 전환)
+- [~] 저장/공유 버튼은 T-038/T-039에서 활성화 (현재 "준비중")
 
 ---
 
