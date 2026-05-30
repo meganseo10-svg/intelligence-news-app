@@ -676,11 +676,11 @@ const result = await db.execute(sql`
 #### T-051 · 운영 런북 ⏱️ 1h
 
 **Tasks**:
-- [ ] `docs/RUNBOOK.md` 작성
-- [ ] Cron 실패 대응
-- [ ] LLM 실패 대응
-- [ ] DB 백업 정책
-- [ ] API 한도 초과 대응
+- [x] `docs/RUNBOOK.md` 작성
+- [x] Cron 실패 대응
+- [x] LLM 실패 대응
+- [x] DB 백업 정책
+- [x] API 한도 초과 대응 (+ 이메일 실패, RLS/보안, 수동 트리거)
 
 ---
 
