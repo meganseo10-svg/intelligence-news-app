@@ -1,0 +1,12 @@
+{
+  "name": "Intelligence Daily",
+  "short_name": "Intel Daily",
+  "description": "매일 아침, 내 비즈니스 관점의 뉴스 브리핑",
+  "start_url": "/feed",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#18181b",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

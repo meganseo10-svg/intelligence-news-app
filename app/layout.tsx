@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -17,6 +17,13 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Intelligence Daily",
   description: "매일 아침, 내 비즈니스 관점의 뉴스 브리핑",
+  manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#18181b",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

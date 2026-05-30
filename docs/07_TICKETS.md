@@ -648,10 +648,10 @@ const result = await db.execute(sql`
 #### T-048 · 모바일 반응형 점검 ⏱️ 3h
 
 **Tasks**:
-- [ ] 실제 폰으로 4개 화면 모두 확인
-- [ ] 터치 영역 ≥ 44px
-- [ ] iOS Safari 100vh 처리
-- [ ] PWA manifest.json
+- [~] 실제 폰으로 4개 화면 확인 (배포 후 사용자 점검)
+- [~] 터치 영역 ≥ 44px (대체로 충족, 배포 후 미세조정)
+- [x] iOS Safari 100vh → `min-h-dvh` 사용
+- [x] PWA manifest.json (+ icon.svg, viewport themeColor)
 
 ---
 
