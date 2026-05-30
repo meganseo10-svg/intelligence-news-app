@@ -306,15 +306,13 @@ headers: {
 #### T-019 · RSS 어댑터 ⏱️ 3h
 
 **Tasks**:
-- [ ] `pnpm add rss-parser`
-- [ ] `lib/sources/rss.ts`
-- [ ] 관리자 설정 파일 또는 DB에 RSS URL 목록
-- [ ] 초기 RSS 등록:
-  - Reuters Technology: `https://feeds.reuters.com/reuters/technologyNews`
-  - TechCrunch: `https://techcrunch.com/feed/`
-  - The Verge: `https://www.theverge.com/rss/index.xml`
-  - Ars Technica: `https://feeds.arstechnica.com/arstechnica/index`
-- [ ] 키워드 매칭 (제목·요약에 포함 여부)
+- [x] `pnpm add rss-parser`
+- [x] `lib/sources/rss.ts` (`searchRss`, Promise.allSettled로 피드별 격리)
+- [x] RSS URL 목록 (모듈 상수 `RSS_FEEDS`, 추후 DB 이동 가능)
+- [x] 초기 RSS 등록: TechCrunch / The Verge / Ars Technica / VentureBeat
+  - (Reuters는 RSS 폐지로 VentureBeat로 교체)
+- [x] 키워드 매칭 (제목·요약 포함) + 24시간 필터
+- [x] 실제 검증: 4개 피드에서 "AI" 33건 수집
 
 ---
 
