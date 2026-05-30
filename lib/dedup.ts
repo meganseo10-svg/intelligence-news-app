@@ -1,3 +1,6 @@
+import { eq, sql } from "drizzle-orm";
+import { db, newsClusters } from "@/db";
+
 // 제거할 추적용 쿼리 파라미터 패턴
 const TRACKING_PARAM = [
   /^utm_/,
@@ -37,4 +40,48 @@ export function canonicalizeUrl(raw: string): string {
   } catch {
     return raw.trim();
   }
+}
+
+/** number[] 임베딩을 pgvector 텍스트 리터럴로 변환 */
+function toVectorLiteral(embedding: number[]): string {
+  return `[${embedding.join(",")}]`;
+}
+
+export interface ClusterResult {
+  clusterId: string;
+  isNew: boolean;
+}
+
+/**
+ * 임베딩 기반 의미 중복 제거.
+ * find_similar_cluster(코사인 유사도 ≥ threshold)로 기존 클러스터를 찾고,
+ * 있으면 news_count 증가 후 그 클러스터 id를, 없으면 새 클러스터를 만들어 반환.
+ *
+ * (representative_news_id 갱신은 적재 단계 T-029에서 처리)
+ */
+export async function findOrCreateCluster(
+  embedding: number[],
+  threshold = 0.88,
+): Promise<ClusterResult> {
+  const vec = toVectorLiteral(embedding);
+
+  const rows = await db.execute<{ cluster_id: string | null }>(sql`
+    SELECT find_similar_cluster(${vec}::vector, ${threshold}) AS cluster_id
+  `);
+  const matched =
+    (rows as unknown as { cluster_id: string | null }[])[0]?.cluster_id ?? null;
+
+  if (matched) {
+    await db
+      .update(newsClusters)
+      .set({ newsCount: sql`${newsClusters.newsCount} + 1` })
+      .where(eq(newsClusters.id, matched));
+    return { clusterId: matched, isNew: false };
+  }
+
+  const [created] = await db
+    .insert(newsClusters)
+    .values({ newsCount: 1 })
+    .returning({ id: newsClusters.id });
+  return { clusterId: created.id, isNew: true };
 }

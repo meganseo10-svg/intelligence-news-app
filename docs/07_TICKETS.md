@@ -346,19 +346,19 @@ headers: {
 - [x] `createEmbedding(text)`, `createEmbeddings(texts[])` (배치)
 - [x] 비용 로깅 (`api_usage_log`, text-embedding-3-small $0.02/1M)
 - [x] 텍스트 길이 제한 (8000자)
-- [~] 라이브 검증: OpenAI 크레딧 충전 후 재확인 예정 (현재 429 quota)
+- [x] 라이브 검증 완료: 임베딩 1536차원 정상 수신 ✅
 
 ---
 
 #### T-023 · pgvector 의미 dedup ⏱️ 4h
 
 **Tasks**:
-- [ ] `lib/dedup.ts` — `findOrCreateCluster(newsItem)` 함수
-- [ ] `find_similar_cluster` SQL 함수 호출 (코사인 유사도 ≥ 0.88)
-- [ ] 매칭되면 기존 클러스터에 추가
-- [ ] 없으면 새 클러스터 생성
-- [ ] `news_clusters.news_count` 증가
-- [ ] `representative_news_id`는 가장 빠른 published_at + 신뢰도 높은 매체
+- [x] `lib/dedup.ts` — `findOrCreateCluster(embedding, threshold)` 함수
+- [x] `find_similar_cluster` SQL 함수 호출 (코사인 유사도 ≥ 0.88)
+- [x] 매칭되면 기존 클러스터에 추가 (검증: 0.88↑ → 같은 클러스터)
+- [x] 없으면 새 클러스터 생성 (검증: 0.874 → 새 클러스터)
+- [x] `news_clusters.news_count` 증가
+- [~] `representative_news_id` 선정 → 적재 단계(T-029)에서 처리
 
 **SQL 호출**:
 ```typescript
