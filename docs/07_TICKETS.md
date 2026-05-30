@@ -374,10 +374,11 @@ const result = await db.execute(sql`
 #### T-024 · Claude API 클라이언트 ⏱️ 2h
 
 **Tasks**:
-- [ ] `pnpm add @anthropic-ai/sdk`
-- [ ] `lib/llm/client.ts` — Anthropic 인스턴스
-- [ ] 재시도 로직 (`04_LLM_PROMPTS.md` 참고)
-- [ ] 토큰 사용량 로깅
+- [x] `pnpm add @anthropic-ai/sdk`
+- [x] `lib/llm/client.ts` — Anthropic 인스턴스 + `callClaudeWithRetry`
+- [x] 재시도 로직 (지수 백오프, 검증됨: 3회 재시도 동작)
+- [x] 토큰 사용량/비용 로깅 (`api_usage_log`, 에러도 기록 — 검증됨)
+- [~] 라이브 응답 검증: Anthropic 크레딧 충전 후 (현재 잔액 부족)
 
 ---
 
