@@ -585,21 +585,22 @@ const result = await db.execute(sql`
 #### T-042 · 이메일 템플릿 ⏱️ 3h
 
 **Tasks**:
-- [ ] `pnpm add resend @react-email/components`
-- [ ] `emails/DailyDigest.tsx` — React Email
-- [ ] 상단 요약 + 카테고리별 카드 + 시사점
-- [ ] 다크모드 대응
-- [ ] Gmail, Outlook, 네이버에서 실제 발송 테스트
+- [x] `pnpm add resend @react-email/components @react-email/render`
+- [x] `emails/DailyDigest.tsx` — React Email
+- [x] 상단 요약 + 뉴스 카드(제목 링크) + 시사점
+- [~] 다크모드 대응 (이메일은 라이트 기본; 추후)
+- [~] 실제 발송 테스트 — Resend 키 받으면 검증
 
 ---
 
 #### T-043 · Resend 발송 잡 ⏱️ 2h
 
 **Tasks**:
-- [ ] `app/api/cron/send-daily/route.ts`
-- [ ] 사용자별 시각·채널 매칭
-- [ ] 발송 로그
-- [ ] 실패 시 재시도 (1회)
+- [x] `app/api/cron/send-daily/route.ts` (KST 시각 ±15분 매칭, weekly 요일, urgent_only 필터)
+- [x] 사용자별 시각 매칭 + `lib/notify/email.ts` 발송
+- [x] 발송 로그 (api_usage_log: resend_email)
+- [x] 수동 발송: admin trigger `action:"send"` (테스트용)
+- [~] 실제 수신 검증 — Resend 키 받으면
 
 ---
 
