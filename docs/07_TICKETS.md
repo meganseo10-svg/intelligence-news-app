@@ -139,14 +139,14 @@ export const env = envSchema.parse(process.env);
 #### T-006 · Drizzle ORM 셋업 ⏱️ 2h
 
 **Tasks**:
-- [ ] `pnpm add drizzle-orm postgres`
-- [ ] `pnpm add -D drizzle-kit`
-- [ ] `drizzle.config.ts` 작성
-- [ ] `db/schema/` 폴더에 테이블별 schema 파일 (users.ts, keywords.ts, news.ts, ...)
-- [ ] `db/index.ts` — Drizzle 인스턴스 생성
-- [ ] `pnpm db:studio`로 GUI 확인
+- [x] `pnpm add drizzle-orm postgres`
+- [x] `pnpm add -D drizzle-kit` (+ dotenv)
+- [x] `drizzle.config.ts` 작성 (.env.local 로드, DATABASE_URL 사용)
+- [x] `db/schema/` 폴더에 테이블별 schema 파일 (users/keywords/news/insights/notifications/shared_links/api_usage)
+- [x] `db/index.ts` — Drizzle 인스턴스 생성 (postgres-js, prepare:false)
+- [x] 실DB 연결 검증: 13개 테이블 + 확장 3개 조회 성공
 
-**참고**: schema는 SQL과 1:1 매칭. pgvector 컬럼은 `customType` 사용.
+**참고**: schema는 SQL과 1:1 매칭. pgvector는 drizzle 내장 `vector(1536)` 사용.
 
 **Done When**: Drizzle Studio에서 모든 테이블 조회 가능.
 
