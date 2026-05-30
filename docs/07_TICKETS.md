@@ -542,9 +542,10 @@ const result = await db.execute(sql`
 #### T-038 · 북마크 기능 ⏱️ 2h
 
 **Tasks**:
-- [ ] `POST/DELETE /api/saved`
-- [ ] `/saved` 페이지 (저장한 뉴스 목록)
-- [ ] 메모 입력·수정
+- [x] `POST/DELETE /api/saved` (+ PUT 메모)
+- [x] `/saved` 페이지 (저장한 뉴스 목록) + NewsCard 저장 토글 (피드에 is_saved 표시)
+- [x] 메모 입력·수정 (SavedNote)
+- [x] 검증: 저장 → /saved 조회 → 메모 표시
 
 ---
 

@@ -11,6 +11,7 @@ import {
   translations,
   keywords,
   keywordGroups,
+  savedNews,
 } from "@/db";
 import { NewsCard, type FeedItem } from "@/components/feed/NewsCard";
 import { CategoryTabs } from "@/components/feed/CategoryTabs";
@@ -56,6 +57,7 @@ export default async function FeedPage({
       targetCustomer: insights.targetCustomer,
       riskSignal: insights.riskSignal,
       tags: insights.tags,
+      savedId: savedNews.id,
     })
     .from(userNewsFeed)
     .innerJoin(newsItems, eq(userNewsFeed.newsId, newsItems.id))
@@ -72,6 +74,10 @@ export default async function FeedPage({
     )
     .leftJoin(keywords, eq(userNewsFeed.keywordId, keywords.id))
     .leftJoin(keywordGroups, eq(keywords.groupId, keywordGroups.id))
+    .leftJoin(
+      savedNews,
+      and(eq(savedNews.newsId, newsItems.id), eq(savedNews.userId, user!.id)),
+    )
     .where(
       and(eq(userNewsFeed.userId, user!.id), eq(userNewsFeed.feedDate, date)),
     )
@@ -92,6 +98,7 @@ export default async function FeedPage({
     titleTranslated: r.titleTranslated,
     summaryTranslated: r.summaryTranslated,
     groupCategory: r.groupCategory,
+    isSaved: !!r.savedId,
     insight: r.category
       ? {
           category: r.category,

@@ -32,6 +32,7 @@ export interface FeedItem {
   titleTranslated: string | null;
   summaryTranslated: string | null;
   groupCategory: string | null;
+  isSaved?: boolean;
   insight: {
     category: string | null;
     importanceScore: number | null;
@@ -56,6 +57,27 @@ export function NewsCard({ item }: { item: FeedItem }) {
   const hasTranslation = !!item.titleTranslated && news.originalLang !== "ko";
   const [showOriginal, setShowOriginal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(!!item.isSaved);
+  const [savingBm, setSavingBm] = useState(false);
+
+  async function toggleSave() {
+    setSavingBm(true);
+    try {
+      if (saved) {
+        await fetch(`/api/saved/${news.id}`, { method: "DELETE" });
+        setSaved(false);
+      } else {
+        await fetch("/api/saved", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ news_id: news.id }),
+        });
+        setSaved(true);
+      }
+    } finally {
+      setSavingBm(false);
+    }
+  }
 
   const title =
     showOriginal || !item.titleTranslated
@@ -177,10 +199,18 @@ export function NewsCard({ item }: { item: FeedItem }) {
           <Copy className="mr-1 h-3.5 w-3.5" />
           {copied ? "복사됨!" : "복사"}
         </button>
-        <span className="ml-auto inline-flex items-center text-muted-foreground/50">
-          <Bookmark className="mr-1 h-3.5 w-3.5" />
-          저장(준비중)
-        </span>
+        <button
+          onClick={toggleSave}
+          disabled={savingBm}
+          className={`ml-auto inline-flex items-center hover:text-foreground ${
+            saved ? "text-foreground" : ""
+          }`}
+        >
+          <Bookmark
+            className={`mr-1 h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
+          />
+          {saved ? "저장됨" : "저장"}
+        </button>
       </div>
     </article>
   );
