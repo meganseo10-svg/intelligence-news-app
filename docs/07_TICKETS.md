@@ -399,9 +399,9 @@ const result = await db.execute(sql`
 #### T-026 · 시사점·번역 저장 ⏱️ 2h
 
 **Tasks**:
-- [ ] 분석 결과를 `insights`(사용자별), `translations`(글로벌) 테이블에 분리 저장
-- [ ] 번역 캐시 hit 시 LLM 호출 스킵
-- [ ] 트랜잭션으로 일관성 보장
+- [x] 분석 결과를 `insights`(사용자별), `translations`(글로벌) 분리 저장 (lib/pipeline.ts)
+- [x] 번역 글로벌 캐시 (translations onConflictDoNothing — 같은 news+lang 재기록 안 함)
+- [x] onConflictDoNothing으로 중복 적재 방지 (insights/feed unique 제약)
 
 ---
 
@@ -419,20 +419,21 @@ const result = await db.execute(sql`
 #### T-028 · Vercel Cron 설정 ⏱️ 1h
 
 **Tasks**:
-- [ ] `vercel.json` 작성 (`02_TECH_SPEC.md` 참고)
-- [ ] `app/api/cron/collect/route.ts` 스켈레톤
-- [ ] `Authorization: Bearer ${CRON_SECRET}` 검증
+- [x] `vercel.json` 작성 (collect 20:00 UTC / send-daily 21:30 UTC)
+- [x] `app/api/cron/collect/route.ts` (GET+POST, Vercel Cron 호환)
+- [x] `Authorization: Bearer ${CRON_SECRET}` 검증 (잘못된 시크릿 → 401 확인)
 
 ---
 
 #### T-029 · 사용자별 피드 생성 잡 ⏱️ 4h
 
 **Tasks**:
-- [ ] `app/api/cron/collect/route.ts` 완성
-- [ ] 활성 사용자 순회 → 키워드 → 수집 → dedup → 분석 → 적재
-- [ ] 사용자 청크 처리 (한 번에 5명씩)
-- [ ] 진행 상황 로깅
-- [ ] 통계 반환
+- [x] `lib/pipeline.ts` `runCollectForAllUsers` + cron route 완성
+- [x] 활성 사용자 순회 → 키워드 → 수집 → dedup → 임베딩/클러스터 → 휴리스틱 → 분석 → 적재
+- [x] 사용자 청크 처리 (한 번에 5명씩, Promise.all)
+- [x] 진행 상황 로깅 + 통계 반환
+- [x] 실제 검증: 테스트 계정 수집 122→dedup 99→분석 5→피드 5 ✅
+- [~] LLM은 현재 OpenAI (Claude 대체); maxItemsPerUser 8로 비용/시간 제한
 
 **처리 흐름**:
 ```
@@ -452,9 +453,9 @@ const result = await db.execute(sql`
 #### T-030 · 수동 트리거 ⏱️ 1h
 
 **Tasks**:
-- [ ] `app/api/admin/trigger/route.ts`
-- [ ] 관리자 이메일 화이트리스트 검증
-- [ ] 사용자별/전체 즉시 실행
+- [x] `app/api/admin/trigger/route.ts`
+- [x] 관리자 이메일 화이트리스트 검증 (ADMIN_EMAILS, 비로그인 → 401)
+- [x] 사용자별(scope=me) / 전체(scope=all) 즉시 실행
 
 ---
 

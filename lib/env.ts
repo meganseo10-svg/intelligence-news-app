@@ -37,6 +37,9 @@ const envSchema = z.object({
   // ── App ────────────────────────────────────────────────
   NEXT_PUBLIC_APP_URL: z.string().url(),
 
+  // ── 관리자 ─────────────────────────────────────────────
+  ADMIN_EMAILS: optionalString(),
+
   // ── Monitoring (선택) ──────────────────────────────────
   SENTRY_DSN: optionalString(),
   NEXT_PUBLIC_SENTRY_DSN: optionalString(),
