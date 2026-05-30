@@ -1,0 +1,4 @@
+onlyBuiltDependencies: []
+allowBuilds:
+  unrs-resolver: false
+  msw: false
