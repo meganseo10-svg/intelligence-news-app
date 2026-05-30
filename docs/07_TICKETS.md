@@ -295,10 +295,11 @@ headers: {
 #### T-018 · GNews API 어댑터 ⏱️ 2h
 
 **Tasks**:
-- [ ] `lib/sources/gnews.ts`
-- [ ] `searchGNews(keyword, options)` → `NewsItem[]`
-- [ ] 다국어 지원 (lang 파라미터)
-- [ ] 무료 한도 일일 100건 관리 (`api_usage_log` 활용)
+- [x] `lib/sources/gnews.ts` (+ `lib/usage.ts`, `lib/sources/util.ts`)
+- [x] `searchGNews(keyword, options)` → `CollectedNewsItem[]`
+- [x] 다국어 지원 (lang 파라미터)
+- [x] 무료 한도 일일 100건 관리 (`api_usage_log` 기록·확인)
+- [x] 실제 API 검증: "OpenAI" 영문 5건 수신 + 사용량 0→1 확인
 
 ---
 
