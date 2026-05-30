@@ -127,10 +127,10 @@ export const env = envSchema.parse(process.env);
 #### T-005 · 마이그레이션 SQL 실행 ⏱️ 1h
 
 **Tasks**:
-- [ ] `supabase/migrations/0001_init.sql` 생성 — `03_DATA_MODEL.sql` 전체 내용 복사
-- [ ] Supabase Dashboard > SQL Editor에서 실행
-- [ ] 모든 테이블·인덱스·RLS 정책 생성 확인
-- [ ] pgvector 확장 enable 확인
+- [x] `supabase/migrations/0001_init.sql` 생성 — `03_DATA_MODEL.sql` 전체 내용 복사
+- [x] Supabase Dashboard > SQL Editor에서 실행 (Success. No rows returned)
+- [x] 모든 테이블·인덱스·RLS 정책 생성 확인 (13개 테이블)
+- [x] pgvector 확장 enable 확인 (vector, uuid-ossp, pg_trgm)
 
 **Done When**: Supabase Dashboard에서 모든 테이블 보임.
 
