@@ -519,10 +519,12 @@ const result = await db.execute(sql`
 #### T-036 · 카테고리 탭 필터 ⏱️ 2h
 
 **Tasks**:
-- [ ] `components/feed/CategoryTabs.tsx`
-- [ ] URL 쿼리 동기화 (`?category=competitor`)
-- [ ] 카운트 표시
-- [ ] 검색 입력 (제목 부분 일치)
+- [x] `components/feed/CategoryTabs.tsx` (그룹 카테고리 기반)
+- [x] URL 쿼리 동기화 (`?category=competitor&q=...`)
+- [x] 카운트 표시 (그룹별)
+- [x] 검색 입력 (제목 부분 일치, Enter)
+- [x] 파이프라인 round-robin으로 카테고리 편중 완화 + feed.keyword_id 저장
+- [x] (요청) 카드 제목 클릭 → 원문 새 탭 이동
 
 ---
 

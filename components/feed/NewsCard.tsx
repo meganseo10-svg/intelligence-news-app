@@ -10,6 +10,13 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
+const CATEGORY_LABEL: Record<string, string> = {
+  competitor: "경쟁사",
+  industry: "업계 동향",
+  product: "제품·기술",
+  general: "일반",
+};
+
 export interface FeedItem {
   feedId: string;
   news: {
@@ -24,6 +31,7 @@ export interface FeedItem {
   };
   titleTranslated: string | null;
   summaryTranslated: string | null;
+  groupCategory: string | null;
   insight: {
     category: string | null;
     importanceScore: number | null;
@@ -85,9 +93,13 @@ export function NewsCard({ item }: { item: FeedItem }) {
         {insight && (insight.importanceScore ?? 0) >= 0.8 && (
           <Badge variant="destructive">중요</Badge>
         )}
-        {insight?.category && (
+        {item.groupCategory ? (
+          <Badge variant="secondary">
+            {CATEGORY_LABEL[item.groupCategory] ?? item.groupCategory}
+          </Badge>
+        ) : insight?.category ? (
           <Badge variant="secondary">{insight.category}</Badge>
-        )}
+        ) : null}
         <span className="text-xs text-muted-foreground">
           {news.publisher} · {relativeTime(news.publishedAt)}
         </span>
@@ -99,7 +111,16 @@ export function NewsCard({ item }: { item: FeedItem }) {
         )}
       </div>
 
-      <h3 className="mb-1.5 text-base font-medium leading-snug">{title}</h3>
+      <a
+        href={news.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group"
+      >
+        <h3 className="mb-1.5 text-base font-medium leading-snug group-hover:underline">
+          {title}
+        </h3>
+      </a>
       {summary && (
         <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
           {summary}

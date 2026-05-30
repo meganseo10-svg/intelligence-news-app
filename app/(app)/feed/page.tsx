@@ -1,9 +1,19 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { and, desc, eq } from "drizzle-orm";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { db, userNewsFeed, newsItems, insights, translations } from "@/db";
+import {
+  db,
+  userNewsFeed,
+  newsItems,
+  insights,
+  translations,
+  keywords,
+  keywordGroups,
+} from "@/db";
 import { NewsCard, type FeedItem } from "@/components/feed/NewsCard";
+import { CategoryTabs } from "@/components/feed/CategoryTabs";
 
 function addDays(dateStr: string, days: number): string {
   const d = new Date(dateStr + "T00:00:00Z");
@@ -14,7 +24,7 @@ function addDays(dateStr: string, days: number): string {
 export default async function FeedPage({
   searchParams,
 }: {
-  searchParams: { date?: string };
+  searchParams: { date?: string; category?: string; q?: string };
 }) {
   const supabase = createClient();
   const {
@@ -23,6 +33,8 @@ export default async function FeedPage({
 
   const today = new Date().toISOString().slice(0, 10);
   const date = searchParams.date ?? today;
+  const category = searchParams.category ?? "all";
+  const q = (searchParams.q ?? "").trim().toLowerCase();
 
   const rows = await db
     .select({
@@ -37,6 +49,7 @@ export default async function FeedPage({
       publishedAt: newsItems.publishedAt,
       titleTranslated: translations.titleTranslated,
       summaryTranslated: translations.summaryTranslated,
+      groupCategory: keywordGroups.category,
       category: insights.category,
       importanceScore: insights.importanceScore,
       salesOpportunity: insights.salesOpportunity,
@@ -57,12 +70,14 @@ export default async function FeedPage({
         eq(translations.targetLang, "ko"),
       ),
     )
+    .leftJoin(keywords, eq(userNewsFeed.keywordId, keywords.id))
+    .leftJoin(keywordGroups, eq(keywords.groupId, keywordGroups.id))
     .where(
       and(eq(userNewsFeed.userId, user!.id), eq(userNewsFeed.feedDate, date)),
     )
     .orderBy(desc(insights.importanceScore));
 
-  const items: FeedItem[] = rows.map((r) => ({
+  const all: FeedItem[] = rows.map((r) => ({
     feedId: r.feedId,
     news: {
       id: r.newsId,
@@ -76,6 +91,7 @@ export default async function FeedPage({
     },
     titleTranslated: r.titleTranslated,
     summaryTranslated: r.summaryTranslated,
+    groupCategory: r.groupCategory,
     insight: r.category
       ? {
           category: r.category,
@@ -88,13 +104,34 @@ export default async function FeedPage({
       : null,
   }));
 
+  // 카테고리별 카운트
+  const counts: Record<string, number> = { all: all.length };
+  for (const it of all) {
+    if (it.groupCategory) {
+      counts[it.groupCategory] = (counts[it.groupCategory] ?? 0) + 1;
+    }
+  }
+
+  // 필터 적용
+  let items = all;
+  if (category !== "all") {
+    items = items.filter((it) => it.groupCategory === category);
+  }
+  if (q) {
+    items = items.filter((it) =>
+      `${it.news.titleOriginal} ${it.titleTranslated ?? ""}`
+        .toLowerCase()
+        .includes(q),
+    );
+  }
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-medium">오늘의 인텔리전스</h1>
           <p className="text-sm text-muted-foreground">
-            {date} · 뉴스 {items.length}건
+            {date} · 뉴스 {all.length}건
           </p>
         </div>
         <div className="flex items-center gap-1">
@@ -117,10 +154,15 @@ export default async function FeedPage({
         </div>
       </div>
 
+      <Suspense fallback={null}>
+        <CategoryTabs counts={counts} date={date} />
+      </Suspense>
+
       {items.length === 0 ? (
         <div className="rounded-xl border bg-background p-8 text-center text-sm text-muted-foreground">
-          이 날짜에 수집된 뉴스가 없어요. 매일 새벽에 자동으로 채워지거나,
-          관리자 수동 트리거로 수집할 수 있어요.
+          {all.length === 0
+            ? "이 날짜에 수집된 뉴스가 없어요."
+            : "이 조건에 맞는 뉴스가 없어요."}
         </div>
       ) : (
         <div className="space-y-3">

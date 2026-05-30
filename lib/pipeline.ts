@@ -68,6 +68,7 @@ export async function processUserFeed(
 
   const kws = await db
     .select({
+      id: keywords.id,
       term: keywords.term,
       sources: keywords.sources,
       category: keywordGroups.category,
@@ -84,8 +85,16 @@ export async function processUserFeed(
   // 2) 키워드별 수집 → 통합 dedup (url_canonical)
   const byUrl = new Map<
     string,
-    { item: CollectedNewsItem; keyword: string; group: string }
+    {
+      item: CollectedNewsItem;
+      keyword: string;
+      keywordId: string;
+      group: string;
+    }
   >();
+  // 키워드별로 수집 (나중에 round-robin으로 섞어서 카테고리 편중 방지)
+  const perKeyword: { kw: (typeof kws)[number]; items: CollectedNewsItem[] }[] =
+    [];
   for (const kw of kws) {
     const sources = (
       Array.isArray(kw.sources) ? kw.sources : ["naver", "gnews", "rss"]
@@ -93,14 +102,27 @@ export async function processUserFeed(
     try {
       const items = await collectForKeyword(kw.term, sources);
       stats.collected += items.length;
-      for (const item of items) {
-        const canon = canonicalizeUrl(item.url);
-        if (!byUrl.has(canon)) {
-          byUrl.set(canon, { item, keyword: kw.term, group: kw.category });
-        }
-      }
+      perKeyword.push({ kw, items });
     } catch (e) {
       console.warn(`[pipeline] '${kw.term}' 수집 실패:`, e);
+    }
+  }
+
+  // round-robin 병합 + url_canonical dedup
+  const maxLen = Math.max(0, ...perKeyword.map((p) => p.items.length));
+  for (let i = 0; i < maxLen; i++) {
+    for (const { kw, items } of perKeyword) {
+      const item = items[i];
+      if (!item) continue;
+      const canon = canonicalizeUrl(item.url);
+      if (!byUrl.has(canon)) {
+        byUrl.set(canon, {
+          item,
+          keyword: kw.term,
+          keywordId: kw.id,
+          group: kw.category,
+        });
+      }
     }
   }
   stats.afterDedup = byUrl.size;
@@ -108,7 +130,7 @@ export async function processUserFeed(
   // 3) 항목별 처리 (비용·시간 제한 위해 maxItems 까지)
   const feedDate = todayStr();
   let processed = 0;
-  for (const { item, keyword, group } of byUrl.values()) {
+  for (const { item, keyword, keywordId, group } of byUrl.values()) {
     if (processed >= maxItems) break;
 
     const canon = canonicalizeUrl(item.url);
@@ -241,7 +263,7 @@ export async function processUserFeed(
 
       await db
         .insert(userNewsFeed)
-        .values({ userId, newsId, feedDate })
+        .values({ userId, newsId, keywordId, feedDate })
         .onConflictDoNothing();
 
       stats.feedItems++;
